@@ -2,7 +2,7 @@
 ![Alt Text](https://i.imgur.com/TEIjiKE.png)
 
 
-**Getting Started**
+**Getting Started (Ubuntu & Debian-based systems only)**
 
 ```
 sudo apt update && sudo apt install nodejs npm
