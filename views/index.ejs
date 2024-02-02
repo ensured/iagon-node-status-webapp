@@ -68,23 +68,6 @@
 				/* Initially hidden */
 			}
 
-			/* New: Style for memory information */
-			.memory-info {
-				background-color: #495057;
-				border-radius: 5px;
-				display: flex;
-				padding: 10px;
-				flex-direction: column;
-				align-items: center;
-			}
-
-			.memory-value {
-				font-size: 1.2em;
-				font-weight: bold;
-				margin-bottom: 0 !important;
-				margin: 15px;
-			}
-
 			@keyframes flash {
 				0% {
 					opacity: 1;
@@ -100,7 +83,6 @@
 	</head>
 	<body>
 		<div class="container">
-			<!-- Loading Spinner -->
 			<div class="status">
 				<span id="status-text"></span>
 				<div id="loading-spinner">Loading...</div>
@@ -109,13 +91,6 @@
 				<p id="update-message"></p>
 				<p id="current-version-text"></p>
 				<p id="latest-version"></p>
-
-				<!-- New: Display memory information in a styled container -->
-				<!-- <div class="memory-info">
-					<p class="memory-value" id="used-memory"></p>
-					<p class="memory-value" id="total-memory"></p>
-					<p class="memory-value" id="free-memory"></p>
-				</div> -->
 			</div>
 		</div>
 		<script>
@@ -189,10 +164,8 @@
 				try {
 					// Hide UI elements and show loading spinner while data is loading
 					hideUI();
-
 					const response = await fetch("/api/status");
 					const data = await response.json();
-
 					// Update the UI with the fetched data
 					updateUI(data);
 				} catch (error) {
@@ -203,7 +176,7 @@
 				}
 			}
 
-			// Call fetchData every 30 seconds
+			// Call fetchData every 60 seconds
 			setInterval(fetchData, 60000);
 
 			function updateUI(data) {
@@ -228,15 +201,15 @@
 				);
 				statusElement.classList.add(`status-${data.status}`);
 
-				// usedMemoryElement.textContent = `${data.memoryData.usedMemoryMb.toFixed(
-				// 	0
-				// )}MB Total Usage`;
-				// totalMemoryElement.textContent = `${data.memoryData.totalMemoryMb.toFixed(
-				// 	0
-				// )}MB Total`;
-				// freeMemoryElement.textContent = `${data.memoryData.freeMemoryMb.toFixed(
-				// 	0
-				// )}MB Free`;
+				usedMemoryElement.textContent = `${data.memoryData.usedMemoryMb.toFixed(
+					0
+				)}MB Total Usage`;
+				totalMemoryElement.textContent = `${data.memoryData.totalMemoryMb.toFixed(
+					0
+				)}MB Total`;
+				freeMemoryElement.textContent = `${data.memoryData.freeMemoryMb.toFixed(
+					0
+				)}MB Free`;
 			}
 
 			// Initial fetch when the page loads
