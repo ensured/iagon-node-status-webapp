@@ -44,7 +44,7 @@ sudo systemctl daemon-reload
 sudo systemctl start my-iagon-website
 ```
 
-**Finished! Now to view your website visit 192.168.1.65:5000 or whatever your ip and port you are using are.**
+**Finished! Now to view your website visit linux_machines_ip:5000**
 
 to find your ip of your linux machine this should work:
 
