@@ -54,18 +54,29 @@
 				background-color: #44705b;
 				border-radius: 5px;
 			}
+
 			a {
 				color: rgb(236, 236, 236); /* Use the parent element's color */
 				text-decoration: none;
+			}
+
+			p {
+				margin-bottom: 10px;
+			}
+
+			#latest-version {
+				margin-bottom: 0rem; /* Overwrite reboot.scss from bootstrap */
 			}
 
 			#loading-spinner {
 				position: absolute;
 				top: 50%;
 				left: 50%;
+				padding: 10px;
+				border-radius: 5px;
+				background-color: #3498db;
 				transform: translate(-50%, -50%);
 				display: none;
-				/* Initially hidden */
 			}
 
 			@keyframes flash {
