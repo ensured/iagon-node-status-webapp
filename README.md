@@ -1,5 +1,5 @@
 
-![Alt Text](https://i.imgur.com/w77K6fN.png)
+![Alt Text](https://i.imgur.com/TEIjiKE.png)
 
 
 **Getting Started**
