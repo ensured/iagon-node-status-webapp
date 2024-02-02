@@ -111,11 +111,11 @@
 				<p id="latest-version"></p>
 
 				<!-- New: Display memory information in a styled container -->
-				<div class="memory-info">
+				<!-- <div class="memory-info">
 					<p class="memory-value" id="used-memory"></p>
 					<p class="memory-value" id="total-memory"></p>
 					<p class="memory-value" id="free-memory"></p>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<script>
@@ -228,15 +228,15 @@
 				);
 				statusElement.classList.add(`status-${data.status}`);
 
-				usedMemoryElement.textContent = `${data.memoryData.usedMemoryMb.toFixed(
-					0
-				)}MB Total Usage`;
-				totalMemoryElement.textContent = `${data.memoryData.totalMemoryMb.toFixed(
-					0
-				)}MB Total`;
-				freeMemoryElement.textContent = `${data.memoryData.freeMemoryMb.toFixed(
-					0
-				)}MB Free`;
+				// usedMemoryElement.textContent = `${data.memoryData.usedMemoryMb.toFixed(
+				// 	0
+				// )}MB Total Usage`;
+				// totalMemoryElement.textContent = `${data.memoryData.totalMemoryMb.toFixed(
+				// 	0
+				// )}MB Total`;
+				// freeMemoryElement.textContent = `${data.memoryData.freeMemoryMb.toFixed(
+				// 	0
+				// )}MB Free`;
 			}
 
 			// Initial fetch when the page loads

@@ -36,15 +36,15 @@ function executeCommands() {
 	const isUpdateAvailable = latestVersion !== currentVersion;
 
 	// New: Get free command output to parse memory data
-	const freeOutput = execSync("free -m").toString();
-	const memoryData = parseMemoryData(freeOutput);
+	// const freeOutput = execSync("free -m").toString();
+	// const memoryData = parseMemoryData(freeOutput);
 
 	return {
 		status: isIagCliRunning.toString().trim() ? "running" : "stopped",
 		isUpdateAvailable,
 		latestVersion,
 		currentVersion,
-		memoryData,
+		// memoryData,
 	};
 }
 
