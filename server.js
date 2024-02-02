@@ -35,28 +35,14 @@ function executeCommands() {
 		.trim();
 	const isUpdateAvailable = latestVersion !== currentVersion;
 
-	// New: Get free command output to parse memory data
-	// const freeOutput = execSync("free -m").toString();
-	// const memoryData = parseMemoryData(freeOutput);
-
 	return {
 		status: isIagCliRunning.toString().trim() ? "running" : "stopped",
 		isUpdateAvailable,
 		latestVersion,
 		currentVersion,
-		// memoryData,
 	};
 }
 
-function parseMemoryData(freeOutput) {
-	const freeLines = freeOutput.split("\n").slice(1);
-	const memoryData = freeLines[0].split(/\s+/);
-	const usedMemoryMb = parseFloat(memoryData[2]);
-	const totalMemoryMb = parseFloat(memoryData[1]);
-	const freeMemoryMb = parseFloat(memoryData[3]);
-	return { usedMemoryMb, totalMemoryMb, freeMemoryMb };
-}
-// Start the server
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
