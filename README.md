@@ -23,7 +23,7 @@ sudo nano /etc/systemd/system/my-iagon-website.service
 
 
 ```[Unit]
-Description=SocketIO Example Node.js Application
+Description=Iagon node status web app in nodejs
 After=network.target
 
 [Service]
