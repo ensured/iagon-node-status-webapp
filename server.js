@@ -1,15 +1,20 @@
 const express = require("express");
 const { execSync } = require("child_process");
 const path = require("path");
+const os = require("os");
 
 const app = express();
 const port = 5000;
 
-// Set up view engine (for initial rendering) - Remove this if not needed
+app.use(express.static(path.join(__dirname, "public")));
+
+// Set up view engine (for initial rendering)
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// route to serve the index.ejs in the views directory
+// Get the home directory dynamically
+const HOME_DIRECTORY = os.homedir();
+
 app.get("/", (req, res) => {
 	res.render("index");
 });
@@ -22,7 +27,7 @@ app.get("/api/status", (req, res) => {
 
 function executeCommands() {
 	const isIagCliRunning = execSync(
-		'pgrep -f "/home/b/iag-cli-linux /snapshot/iagon-node-cli/build"'
+		`pgrep -f "${HOME_DIRECTORY}/iag-cli-linux /snapshot/iagon-node-cli/build"`
 	);
 	const latestVersion = execSync(
 		'curl -s https://api.github.com/repos/Iagonorg/mainnet-node-CLI/releases/latest | grep -o -P -m 1 "v.{0,5}"'
@@ -30,9 +35,11 @@ function executeCommands() {
 		.toString()
 		.trim()
 		.replace("v", "");
-	const currentVersion = execSync(`/home/b/iag-cli-linux --version`)
+
+	const currentVersion = execSync(`${HOME_DIRECTORY}/iag-cli-linux --version`)
 		.toString()
 		.trim();
+
 	const isUpdateAvailable = latestVersion !== currentVersion;
 
 	return {
