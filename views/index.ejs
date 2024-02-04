@@ -1,230 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Node Status</title>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" />
-		<style>
-			body {
-				font-family: sans-serif;
-				background-color: #212529;
-				color: #fff;
-				text-align: center;
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Node Status</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" />
+	<style>
+		body {
+			font-family: sans-serif;
+			background-color: #212529;
+			color: #fff;
+			text-align: center;
+		}
+
+		.container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+		}
+
+		.status-running {
+			background-color: #5cb85c;
+			padding: 0.875rem;
+			border-radius: 0.2rem;
+		}
+
+		.status-stopped {
+			background-color: #d9534f;
+			padding: 0.875rem;
+		}
+
+		.update-info {
+			margin-top: 20px;
+			color: #3498db;
+			/* Blue color for text */
+			padding: 10px;
+			background-color: #495057;
+			border-radius: 5px;
+			display: flex;
+			padding: 10px;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.update-available {
+			font-weight: bold;
+			animation: flash 2s infinite;
+			/* Flashing animation for 2 seconds */
+			border-radius: 5px;
+			padding: 10px;
+			background-color: #44705b;
+			border-radius: 5px;
+		}
+
+		a {
+			color: rgb(236, 236, 236);
+			/* Use the parent element's color */
+			text-decoration: none;
+		}
+
+		p {
+			margin-bottom: 10px;
+		}
+
+		#latest-version {
+			margin-bottom: 0rem;
+			/* Overwrite reboot.scss from bootstrap */
+		}
+
+		#loading-spinner {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			padding: 10px;
+			border-radius: 5px;
+			background-color: #3498db;
+			transform: translate(-50%, -50%);
+			display: none;
+		}
+
+		@keyframes flash {
+			0% {
+				opacity: 1;
 			}
 
-			.container {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				height: 100vh;
+			50% {
+				opacity: 0;
 			}
 
-			.status-running {
-				background-color: #5cb85c;
-				padding: 0.875rem;
-				border-radius: 0.2rem;
+			100% {
+				opacity: 1;
 			}
+		}
+	</style>
+</head>
 
-			.status-stopped {
-				background-color: #d9534f;
-				padding: 0.875rem;
-			}
-
-			.update-info {
-				margin-top: 20px;
-				color: #3498db; /* Blue color for text */
-				padding: 10px;
-				background-color: #495057;
-				border-radius: 5px;
-				display: flex;
-				padding: 10px;
-				flex-direction: column;
-				align-items: center;
-			}
-
-			.update-available {
-				font-weight: bold;
-				animation: flash 2s infinite; /* Flashing animation for 2 seconds */
-				border-radius: 5px;
-				padding: 10px;
-				background-color: #44705b;
-				border-radius: 5px;
-			}
-
-			a {
-				color: rgb(236, 236, 236); /* Use the parent element's color */
-				text-decoration: none;
-			}
-
-			p {
-				margin-bottom: 10px;
-			}
-
-			#latest-version {
-				margin-bottom: 0rem; /* Overwrite reboot.scss from bootstrap */
-			}
-
-			#loading-spinner {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				padding: 10px;
-				border-radius: 5px;
-				background-color: #3498db;
-				transform: translate(-50%, -50%);
-				display: none;
-			}
-
-			@keyframes flash {
-				0% {
-					opacity: 1;
-				}
-				50% {
-					opacity: 0;
-				}
-				100% {
-					opacity: 1;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<div class="status">
-				<span id="status-text"></span>
-				<div id="loading-spinner">Loading...</div>
-			</div>
-			<div class="update-info">
-				<p id="update-message"></p>
-				<p id="current-version-text"></p>
-				<p id="latest-version"></p>
-			</div>
+<body>
+	<div class="container">
+		<div class="status">
+			<span id="status-text"></span>
+			<div id="loading-spinner">Loading...</div>
 		</div>
-		<script>
-			const latestVersionElement =
-				document.getElementById("latest-version");
-			const currentVersionElement = document.getElementById(
-				"current-version-text"
+		<div class="update-info">
+			<p id="update-message"></p>
+			<p id="current-version-text"></p>
+			<p id="latest-version"></p>
+		</div>
+	</div>
+	<script>
+		const latestVersionElement =
+			document.getElementById("latest-version");
+		const currentVersionElement = document.getElementById(
+			"current-version-text"
+		);
+		const isUpdateAvailableElement =
+			document.getElementById("isUpdateAvailable");
+		const statusElement = document.getElementById("status-text");
+		const updateMessageElement =
+			document.getElementById("update-message");
+		const updateInfoElement = document.querySelector(".update-info");
+
+		const loadingSpinner = document.getElementById("loading-spinner");
+
+		function hideUI() {
+			const uiElements = [
+				updateInfoElement,
+				isUpdateAvailableElement,
+				updateMessageElement,
+				statusElement,
+				latestVersionElement,
+				currentVersionElement,
+			];
+
+			uiElements.forEach((element) => {
+				if (element) {
+					element.style.display = "none";
+				}
+			});
+
+			loadingSpinner.style.display = "block"; // Show the loading spinner
+		}
+
+		function showUI() {
+			const uiElements = [
+				updateInfoElement,
+				isUpdateAvailableElement,
+				updateMessageElement,
+				statusElement,
+				latestVersionElement,
+				currentVersionElement,
+			];
+
+			uiElements.forEach((element) => {
+				if (element) {
+					element.style.display = "block";
+				}
+			});
+
+			loadingSpinner.style.display = "none"; // Hide the loading spinner
+		}
+
+		async function fetchData() {
+			try {
+				hideUI();
+				const response = await fetch("/api/status");
+				const data = await response.json();
+				updateUI(data);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			} finally {
+				showUI();
+			}
+		}
+
+		function updateUI(data) {
+			latestVersionElement.innerHTML = `Latest available: <strong>${data.latestVersion}</strong>`;
+			currentVersionElement.innerHTML = `Current: <strong>${data.currentVersion}</strong>`;
+
+			if (data.isUpdateAvailable) {
+				updateMessageElement.innerHTML = `<a className="update-avail" href="https://github.com/Iagonorg/mainnet-node-cli/releases/latest">New Update Available! </a>`;
+				updateMessageElement.classList.add("update-available");
+			} else {
+				updateMessageElement.textContent = "No Update Available";
+				updateMessageElement.classList.remove("update-available");
+			}
+
+			statusElement.textContent = `Status: ${data.status}`;
+			statusElement.classList.remove(
+				"status-running",
+				"status-stopped"
 			);
-			const isUpdateAvailableElement =
-				document.getElementById("isUpdateAvailable");
-			const statusElement = document.getElementById("status-text");
-			const updateMessageElement =
-				document.getElementById("update-message");
-			const usedMemoryElement = document.getElementById("used-memory");
-			const totalMemoryElement = document.getElementById("total-memory");
-			const freeMemoryElement = document.getElementById("free-memory");
-			const memoryInfoElement = document.querySelector(".memory-info");
-			const updateInfoElement = document.querySelector(".update-info");
+			statusElement.classList.add(`status-${data.status}`);
 
-			// Loading Spinner
-			const loadingSpinner = document.getElementById("loading-spinner");
 
-			function hideUI() {
-				const uiElements = [
-					updateInfoElement,
-					memoryInfoElement,
-					freeMemoryElement,
-					usedMemoryElement,
-					totalMemoryElement,
-					isUpdateAvailableElement,
-					updateMessageElement,
-					statusElement,
-					latestVersionElement,
-					currentVersionElement,
-				];
+		}
 
-				uiElements.forEach((element) => {
-					if (element) {
-						element.style.display = "none";
-					}
-				});
+		// Call fetchData and then fetchData after every 60 seconds
+		setInterval(fetchData, 60000);
+		fetchData();
+	</script>
+</body>
 
-				loadingSpinner.style.display = "block"; // Show the loading spinner
-			}
-
-			function showUI() {
-				const uiElements = [
-					updateInfoElement,
-					memoryInfoElement,
-					freeMemoryElement,
-					usedMemoryElement,
-					totalMemoryElement,
-					isUpdateAvailableElement,
-					updateMessageElement,
-					statusElement,
-					latestVersionElement,
-					currentVersionElement,
-				];
-
-				uiElements.forEach((element) => {
-					if (element) {
-						element.style.display = "block";
-					}
-				});
-
-				loadingSpinner.style.display = "none"; // Hide the loading spinner
-			}
-
-			// Fetch data from the server
-			async function fetchData() {
-				try {
-					// Hide UI elements and show loading spinner while data is loading
-					hideUI();
-					const response = await fetch("/api/status");
-					const data = await response.json();
-					// Update the UI with the fetched data
-					updateUI(data);
-				} catch (error) {
-					console.error("Error fetching data:", error);
-				} finally {
-					// Show UI elements and hide loading spinner after updating UI
-					showUI();
-				}
-			}
-
-			// Call fetchData every 60 seconds
-			setInterval(fetchData, 60000);
-
-			function updateUI(data) {
-				// Update version information
-				latestVersionElement.innerHTML = `Latest available: <strong>${data.latestVersion}</strong>`;
-				currentVersionElement.innerHTML = `Current: <strong>${data.currentVersion}</strong>`;
-
-				// Update update status
-				if (data.isUpdateAvailable) {
-					updateMessageElement.innerHTML = `<a className="update-avail" href="https://github.com/Iagonorg/mainnet-node-cli/releases/latest">New Update Available! </a>`;
-					updateMessageElement.classList.add("update-available");
-				} else {
-					updateMessageElement.textContent = "No Update Available";
-					updateMessageElement.classList.remove("update-available");
-				}
-
-				// Update status
-				statusElement.textContent = `Status: ${data.status}`;
-				statusElement.classList.remove(
-					"status-running",
-					"status-stopped"
-				);
-				statusElement.classList.add(`status-${data.status}`);
-
-				usedMemoryElement.textContent = `${data.memoryData.usedMemoryMb.toFixed(
-					0
-				)}MB Total Usage`;
-				totalMemoryElement.textContent = `${data.memoryData.totalMemoryMb.toFixed(
-					0
-				)}MB Total`;
-				freeMemoryElement.textContent = `${data.memoryData.freeMemoryMb.toFixed(
-					0
-				)}MB Free`;
-			}
-
-			// Initial fetch when the page loads
-			fetchData();
-		</script>
-	</body>
 </html>
