@@ -32,6 +32,7 @@ WorkingDirectory=/home/b/iagon-node-status-webapp
 ExecStart=/usr/bin/node /home/b/iagon-node-status-webapp/server.js
 Restart=always
 Environment=NODE_ENV=production
+Environment=HOME=/home/b
 
 [Install]
 WantedBy=multi-user.target
