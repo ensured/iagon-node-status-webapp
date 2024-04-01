@@ -26,9 +26,9 @@ app.get("/api/status", (req, res) => {
 });
 
 function executeCommands() {
-	const isIagCliRunning = execSync(
-		`pgrep -f "${HOME_DIRECTORY}/iag-cli-linux /snapshot/iagon-node-cli/build"`
-	);
+	const output = execSync(`sudo /home/b/./iag-cli-linux get:status 2>&1`);
+	const substring = "Node is up and running"
+	const isIagCliRunning = output.toString().includes(substring);
 	const latestVersion = execSync(
 		'curl -s https://api.github.com/repos/Iagonorg/mainnet-node-CLI/releases/latest | grep -o -P -m 1 "v.{0,5}"'
 	)
