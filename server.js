@@ -26,7 +26,8 @@ app.get("/api/status", (req, res) => {
 });
 
 function executeCommands() {
-	const output = execSync(`sudo /home/b/./iag-cli-linux get:status 2>&1`);
+	console.log(HOME_DIRECTORY)
+	const output = execSync(`${HOME_DIRECTORY}/./iag-cli-linux get:status 2>&1`);
 	const substring = "Node is up and running"
 	const isIagCliRunning = output.toString().includes(substring);
 	const latestVersion = execSync(
